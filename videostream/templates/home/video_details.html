@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ video.title }}{% endblock title %}
+{% block body %}
+
+<div class='container'>
+    <h1>{{ video.title }}</h1>
+    <!--
+        {% if user.is_authenticated %}
+            {% if user.id == product.author.id %}
+                <small>
+                    <a href=" {% url 'Update_Product' product.pk %} ">Edit</a> 
+                    <a href=" {% url 'Delete_Product' product.pk %} ">(Delete)</a>
+                </small>
+            {% endif %}
+        {% endif %}
+    -->
+    <br>
+
+    <small>
+        By: {{ video.author.username }}
+        <br>
+        Posted : {{ video.created_at }} <br>Last update : {{ video.updated_at }}
+        <br>
+    </small>
+
+    <hr>
+    <video width="530" height="440" controls autoplay>
+        <source src="{{ video.video.url }}" type="video/mp4"> </source>
+      </video>
+    <br>
+    <hr>
+        <h2>Comments...</h2>
+        Total Comments-{{ video.comments.all.count }}
+        <br>
+        <hr>
+        {% if not video.comments.all %}
+                No Comments Yet..
+                <br>
+
+                <div class="form-group">
+                    <form action="{% url 'add_comment' video.pk %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="hidden" name="videoId" value="{{ video.pk }}">
+                            <label for="comment">Comment</label>
+                            <div class="input-group">
+                                <textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder="Comment Here"></textarea>
+                            </div>
+                        </div>
+                    <button class="btn btn-success">Add One</button>
+                    </form>
+                </div>
+
+                {% else %}
+                    
+                       <!--Display all Comments-->
+                        {% for comment in video.comments.all %}
+                            <strong>
+                                {{comment.author}} -{{ comment.created_at }}
+                            </strong> 
+                            <br>
+                            {{ comment.body }}
+                            <br><br>
+                        {% endfor %}
+
+
+                        {% if user.is_authenticated %}
+                        <div class="form-group">
+                            <form action="{% url 'add_comment' video.pk %}" method="POST" >
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="hidden" name="videoId" value="{{ video.pk }}">
+                                    <label for="comment">Comment</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder="Comment Here"></textarea>
+                                    </div>
+                                </div>
+                            <button class="btn btn-success">Add One</button>
+                            </form>
+                        </div>
+                        {% else %}
+
+                        <div class="form-group">
+                            <form>
+                                <div class="form-group">
+                                    <label for="comment">Comment</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder="Comment Here"></textarea>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary sm mr-2" data-toggle="modal" data-target="#loginModal">Add On</button> 
+                            </form>
+                        </div>
+                        {% endif %}
+                        
+                        
+
+                {% endif %}
+        <hr>
+
+    {% if user.id == video.author.id %}
+        <a href="{% url 'Update_Video' video.pk %}" class="btn btn-warning">Update</a>
+        <a href="{% url 'Delete_Video' video.pk %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+
+    <a href="{% url 'homeView' %}" class="btn btn-dark">Back</a>
+
+</div>
+
+<script>
+    var name="{{ user.id }}";
+    document.getElementById("user_id").value=name;
+</script>
+{% endblock body %}

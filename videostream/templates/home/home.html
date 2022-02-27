@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+{% block title %}Home{% endblock title %} 
+{% block homeactive %} active {% endblock homeactive %}
+
+{% block body %} 
+<div class="container my-4">
+    <h1 class="my-2 text-center">Stream Videos</h1>
+    <div class="container">
+        <h1>Videos</h1>
+    <ul>
+    {% for video in object_list %}
+    <li> <a href=" {% url 'Video_Details' video.pk %} ">
+    {{ video.title | safe }} </a> -
+    <br>
+    <a href=" {% url 'category' video.category|slugify %} ">
+        {{ video.category }}</a>-
+    <br>
+
+    <small>
+    {% if user.is_authenticated %}
+    {% if user.id == video.author.id %}
+    <a href=" {% url 'Update_Video' video.pk %} ">(Edit)</a>
+    <a href=" {% url 'Delete_Video' video.pk %} ">(Delete)</a>
+    {% endif %}
+    {% endif %}
+</small>
+
+    <br>
+     {{video.author.username}} - {{ video.created_at }}
+
+    <br>
+    <a href=" {% url 'Video_Details' video.pk %}">Visit Video</a>
+    </li>
+    {% endfor %}
+    </ul>
+    </div>
+</div>
+
+{% endblock body %}

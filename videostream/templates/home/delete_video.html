@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}DELETE VIDEO{% endblock title %}
+{% block body %}
+{% if user.is_authenticated %}
+{% if user.id == video.author.id %}
+<h1>Delete Video...</h1>
+    <br/><br/>
+<h3>Delete:{{ video.title }}</h3>
+<div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            <strong>Are you Sure to Delete!!</strong><br><br>
+        <button class="btn btn-danger">Delete</button>
+    </form>
+</div>
+{% else %}
+You are Not allowed here
+{% endif %}
+
+{% else %}
+You are Not allowed here
+{% endif %}
+{% endblock body %}

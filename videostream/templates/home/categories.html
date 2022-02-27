@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Category{% endblock title %}
+{% block body %}
+<h1>{{ cats }}</h1>
+<ul>
+    {% for video in category_posts %}
+            {% if user.is_authenticated %}
+            <small>
+                <a href=" {% url 'Update_Video' video.pk %} ">Edit</a> 
+                <a href=" {% url 'Delete_Video' video.pk %} ">(Delete)</a>
+            </small>
+            {% endif %}
+<br>
+<small>By: {{ video.author.username }}<br/>{{ video.created_at }}
+
+{% endfor %}
+</ul>
+<br/>
+<br/>
+{% endblock body %}
